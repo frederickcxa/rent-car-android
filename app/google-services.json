@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "492335925387",
+    "firebase_url": "https://rentcar-8e189.firebaseio.com",
+    "project_id": "rentcar-8e189",
+    "storage_bucket": "rentcar-8e189.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492335925387:android:715dc3feb5090a53",
+        "android_client_info": {
+          "package_name": "com.icode.rentcar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "492335925387-a2u34m556jipl739dc952lnbmf73ngcn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.icode.rentcar",
+            "certificate_hash": "0d9fc9d11744ad30f91357ce469c1f83e65eb572"
+          }
+        },
+        {
+          "client_id": "492335925387-necdcr56jijl13juvoar5558pnda8n86.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUqNO516Z9nuk-TK6rkxz-VnnTEVcYJ9s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "492335925387-necdcr56jijl13juvoar5558pnda8n86.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
