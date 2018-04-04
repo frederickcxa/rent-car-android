@@ -7,5 +7,19 @@
 
     <include layout="@layout/toolbar" />
 
-    <include layout="@layout/content_home" />
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".home.HomeActivity"
+        tools:showIn="@layout/app_bar_home">
+
+        <FrameLayout
+            android:id="@+id/mainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.constraint.ConstraintLayout>
 </android.support.design.widget.CoordinatorLayout>
