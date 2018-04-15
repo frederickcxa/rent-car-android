@@ -1,4 +1,4 @@
-package ui
+package com.icode.rentcar.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -19,9 +19,8 @@ class TrackCarsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var googleMap: GoogleMap
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_track_cars, container, false)
-    }
+                              savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_track_cars, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,10 +29,11 @@ class TrackCarsFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        this.googleMap = googleMap
+        with(googleMap) {
 
-        val sydney = LatLng(-34.0, 151.0)
-        this.googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+            val sydney = LatLng(-34.0, 151.0)
+            addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+            moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        }
     }
 }
