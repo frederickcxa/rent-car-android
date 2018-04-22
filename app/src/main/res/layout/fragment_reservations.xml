@@ -2,21 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin"
-    tools:context="com.icode.rentcar.ui.SearchVehicleFragment">
-
-    <Button
-        android:id="@+id/filterVehiclesButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Filter" />
+    tools:context="com.icode.rentcar.ui.ReservationsActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/vehiclesRecyclerView"
+        android:id="@+id/reservationsRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/filterVehiclesButton" />
+        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -31,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No hay vehículos"
+        android:text="No hay reservaciones"
         android:visibility="gone"
         tools:visibility="visible" />
 </RelativeLayout>
