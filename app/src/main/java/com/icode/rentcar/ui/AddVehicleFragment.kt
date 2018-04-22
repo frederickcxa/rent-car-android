@@ -10,29 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 
-import com.icode.rentcar.R
 import com.icode.rentcar.models.Vehicle
 import kotlinx.android.synthetic.main.fragment_add_vehicle.*
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
-import com.google.android.gms.tasks.OnSuccessListener
-import android.support.annotation.NonNull
-import com.google.android.gms.tasks.OnFailureListener
 import android.graphics.Bitmap
 import com.google.firebase.firestore.SetOptions
-import com.icode.rentcar.R.id.imageView
-import com.icode.rentcar.R.id.imageView
+import com.icode.rentcar.*
 import java.io.ByteArrayOutputStream
-import com.google.firebase.storage.StorageReference
-
-
-const val TAG = "AddVehicleFragment"
 
 class AddVehicleFragment : Fragment() {
-    var db = FirebaseFirestore.getInstance()
-    var storage = FirebaseStorage.getInstance().reference
+    private val db = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance().reference
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View =
@@ -41,48 +31,41 @@ class AddVehicleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val years = (1990..2018).toList()
-        val colors = listOf(
-                "Black",
-                "Yellow",
-                "Blue",
-                "Red",
-                "Gray",
-                "White",
-                "Orange"
-        ).sorted()
-
-        val makes = listOf(
-                "Toyota",
-                "Honda",
-                "Mazda",
-                "Nissan",
-                "Chevrolet"
-        ).sorted()
-
-        yearSpinner.adapter = getSpinnerAdapter(years)
-        colorSpinner.adapter = getSpinnerAdapter(colors)
-        makeSpinner.adapter = getSpinnerAdapter(makes)
+        yearSpinner.adapter = getSpinnerAdapter(YEARS)
+        colorSpinner.adapter = getSpinnerAdapter(COLORS)
+        makeSpinner.adapter = getSpinnerAdapter(MAKES)
 
         addPhotoButton.setOnClickListener { pickPhoto() }
         saveVehicleButton.setOnClickListener {
-            if (photosContainer.childCount > 0) {
+            if (isFormValid()) {
+                showProgressBar()
                 saveVehicleInfo(getVehicle())
             } else {
-                Toast.makeText(context, "Debe agregar las fotos del vehiculo", Toast.LENGTH_SHORT).show()
+                toast("Debe agregar fotos y la información del vehículo")
             }
         }
+    }
+
+    private fun showProgressBar(display: Boolean = true) {
+        if (display) {
+            formContainer.visibility = View.INVISIBLE
+            progressBar.visibility = View.VISIBLE
+        } else {
+            formContainer.visibility = View.VISIBLE
+            progressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun isFormValid(): Boolean {
+        return photosContainer.childCount > 0 && arrayOf(yearSpinner, colorSpinner, makeSpinner)
+                .all { it.selectedItem.toString() != DEFAULT_OPTION }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            0 -> {
-                if (resultCode == RESULT_OK) {
-                    addImageToLayout(data?.data)
-                }
-            }
+            0 -> if (resultCode == RESULT_OK) addImageToLayout(data?.data)
         }
     }
 
@@ -90,6 +73,8 @@ class AddVehicleFragment : Fragment() {
         val images = (0..photosContainer.childCount).map {
             photosContainer.getChildAt(it)
         }.filter { it is ImageView }
+        val imagesCount = images.size
+        var uploadedImages = 0
 
         images.map { image ->
             image.isDrawingCacheEnabled = true
@@ -104,7 +89,27 @@ class AddVehicleFragment : Fragment() {
         }.forEachIndexed { index, data ->
             val ref = storage.child("vehicles/$vehicleId/photos_$index.jpg")
 
-            ref.putBytes(data).addOnSuccessListener { it.downloadUrl?.let { updateVehiclePhotos(vehicleId, it) } }
+            ref.putBytes(data).addOnSuccessListener {
+                it.downloadUrl?.let {
+                    updateVehiclePhotos(vehicleId, it)
+                    if (index == 0) {
+                        updateVehicleField(vehicleId, "imageUrl", it.toString())
+                    }
+                }
+
+                uploadedImages++
+
+                if (uploadedImages == imagesCount) clearForm()
+            }
+        }
+    }
+
+    private fun clearForm() {
+        if (isAdded) {
+            photosContainer.removeAllViews()
+            arrayOf(colorSpinner, makeSpinner, yearSpinner).forEach { it.setSelection(0) }
+            toast("El vehiculo fue guardado")
+            showProgressBar(false)
         }
     }
 
@@ -114,14 +119,12 @@ class AddVehicleFragment : Fragment() {
                 .set(mapOf(imageUrl.toString() to "true"), SetOptions.merge())
     }
 
-    private fun getVehicle(): Vehicle {
-        return Vehicle(
-                makeSpinner.selectedItem.toString(),
-                colorSpinner.selectedItem.toString(),
-                yearSpinner.selectedItem as Int,
-                1
-        )
-    }
+    private fun getVehicle() = Vehicle(
+            make = makeSpinner.selectedItem.toString(),
+            color = colorSpinner.selectedItem.toString(),
+            year = yearSpinner.selectedItem.toString(),
+            dealerId = getUserId()
+    )
 
     private fun saveVehicleInfo(vehicle: Vehicle) {
         db.collection("vehicles")
@@ -129,17 +132,16 @@ class AddVehicleFragment : Fragment() {
                 .addOnSuccessListener { documentReference ->
                     Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
 
-                    uploadImages(documentReference.id)
+                    with(documentReference.id) {
+                        updateVehicleField(this, "id", this)
+                        uploadImages(this)
+                    }
                 }.addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
     }
 
     private fun addImageToLayout(uri: Uri?) {
         uri?.let {
-            val layoutParams = LinearLayout.LayoutParams(
-                    500,
-                    500
-            )
-
+            val layoutParams = LinearLayout.LayoutParams(500, 500)
             val imageView = ImageView(context).apply {
                 setImageURI(uri)
                 setLayoutParams(layoutParams)
@@ -150,14 +152,10 @@ class AddVehicleFragment : Fragment() {
     }
 
     private fun pickPhoto() {
-        val galleryUri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        val galleryUri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
         Intent(Intent.ACTION_PICK, galleryUri).also {
             startActivityForResult(it, 0)
         }
-    }
-
-    private fun <T> getSpinnerAdapter(items: List<T>) = ArrayAdapter<T>(context, android.R.layout.simple_spinner_item, items).apply {
-        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
 }
