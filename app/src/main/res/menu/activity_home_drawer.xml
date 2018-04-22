@@ -23,9 +23,9 @@
     <item android:title="@string/drawer_menu_group_users">
         <menu>
             <item
-                android:id="@+id/nav_rent_car"
+                android:id="@+id/nav_search_car"
                 android:icon="@drawable/ic_directions_car_black_24dp"
-                android:title="@string/drawer_nav_item_rent_car" />
+                android:title="@string/drawer_nav_item_search_car" />
             <item
                 android:id="@+id/nav_find_car_lot"
                 android:icon="@drawable/ic_local_parking_black_24dp"

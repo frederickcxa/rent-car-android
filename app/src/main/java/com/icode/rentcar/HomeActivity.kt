@@ -10,6 +10,8 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.toolbar.*
 import com.icode.rentcar.ui.AddVehicleFragment
+import com.icode.rentcar.ui.ReservationsFragment
+import com.icode.rentcar.ui.SearchVehicleFragment
 import com.icode.rentcar.ui.TrackCarsFragment
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -31,6 +33,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
+        showHome()
+    }
+
+    private fun showHome() {
+        val itemId = if (isUserAdmin(getUserType())) R.id.nav_all_business else R.id.nav_search_car
+        renderFragment(itemId)
     }
 
     override fun onBackPressed() {
@@ -41,18 +49,28 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val fragment = when (item.itemId) {
-            R.id.nav_add_car -> AddVehicleFragment()
-            R.id.nav_track_cars -> TrackCarsFragment()
-            R.id.nav_rent_car -> null // Display `RentCarFragment`
-            R.id.nav_find_car_lot -> null // Display `FindCarLotFragment`
-            R.id.nav_all_business -> null // Display `BusinessFragment`
-            R.id.nav_my_business -> null // Display `BusinessFragment` filtered by user
-            else -> null
+    private fun renderFragment(itemId: Int) {
+        val (fragment, title) = when (itemId) {
+            R.id.nav_add_car -> AddVehicleFragment() to "Agregar Vehiculo"
+            R.id.nav_track_cars -> TrackCarsFragment() to "Monitorear Vehiculos"
+            R.id.nav_search_car -> SearchVehicleFragment() to "Buscar Vehiculo"
+            R.id.nav_find_car_lot -> null to "Ver Parqueos"
+            R.id.nav_all_business -> ReservationsFragment() to "Reservaciones"
+            R.id.nav_my_business -> ReservationsFragment() to "Mis Reservaciones"
+            else -> null to null
         }
 
-        fragment?.let { replaceFragment(it) }
+        if (fragment is Fragment) {
+            replaceFragment(fragment)
+        }
+
+        if (title is String) {
+            supportActionBar?.title = title
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        renderFragment(item.itemId)
         drawerLayout.closeDrawer(GravityCompat.START)
 
         return true
@@ -60,7 +78,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.mainContainer, fragment)
+                .replace(R.id.formContainer, fragment)
                 .commit()
     }
 }

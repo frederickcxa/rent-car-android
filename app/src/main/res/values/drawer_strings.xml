@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Menu Groups -->
-    <string name="drawer_menu_group_admin">Admin</string>
-    <string name="drawer_menu_group_users">Users</string>
+    <string name="drawer_menu_group_admin">Administrador</string>
+    <string name="drawer_menu_group_users">Clientes</string>
 
     <!-- Nav Items -->
-    <string name="drawer_nav_item_add_car">Add Car</string>
-    <string name="drawer_nav_item_track_cars">Track Cars</string>
-    <string name="drawer_nav_item_car_lots">Car lots</string>
-    <string name="drawer_nav_item_rent_car">Rent Car</string>
-    <string name="drawer_nav_item_all_business">All Rents</string>
-    <string name="drawer_nav_item_my_business">My Rents</string>
+    <string name="drawer_nav_item_add_car">Agregar Vehiculo</string>
+    <string name="drawer_nav_item_track_cars">Monitorear Vehiculo</string>
+    <string name="drawer_nav_item_car_lots">Ver Parqueos</string>
+    <string name="drawer_nav_item_search_car">Buscar Vehiculo</string>
+    <string name="drawer_nav_item_all_business">Reservaciones</string>
+    <string name="drawer_nav_item_my_business">Mis Reservaciones</string>
 </resources>

@@ -17,7 +17,7 @@
         tools:showIn="@layout/app_bar_home">
 
         <FrameLayout
-            android:id="@+id/mainContainer"
+            android:id="@+id/formContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
