@@ -70,7 +70,7 @@ class SearchVehicleFragment : Fragment() {
   private fun loadData() {
     showView(progressBar)
     db.collection("vehicles")
-        .whereEqualTo("dealerId", getUserId())
+        .whereEqualTo("dealerId", context?.getUserId())
         .whereEqualTo("status", "false")
         .get()
         .addOnCompleteListener { task ->

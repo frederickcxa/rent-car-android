@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="@string/drawer_menu_group_admin">
+    <item
+        android:id="@+id/adminGroup"
+        android:title="@string/drawer_menu_group_admin">
         <menu>
             <item
                 android:id="@+id/nav_add_car"

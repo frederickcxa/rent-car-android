@@ -39,7 +39,11 @@ class ReservationsFragment : Fragment() {
 
   private fun loadData() {
     showView(progressBar)
-    db.collection("reservations").run { if (isUserAdmin(getUserType())) this else whereEqualTo("userId", getUserId()) }
+    db.collection("reservations").run {
+      context?.let {
+        if (isUserAdmin(it.getUserType())) this else whereEqualTo("userId", it.getUserId())
+      } ?: this
+    }
         .get()
         .addOnCompleteListener { task ->
           if (task.isSuccessful) {

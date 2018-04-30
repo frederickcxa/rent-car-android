@@ -12,5 +12,4 @@ data class Reservation(
     var userName: String = ""
 ) {
   fun getDescription() = "$userName - $make $year $color"
-
 }

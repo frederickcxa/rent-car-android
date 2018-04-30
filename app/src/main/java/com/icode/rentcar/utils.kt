@@ -1,6 +1,9 @@
 package com.icode.rentcar
 
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -8,6 +11,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
+import junit.runner.BaseTestRunner.getPreference
+import java.sql.ClientInfoStatus
 
 fun Activity.toast(message: String, length: Int = Toast.LENGTH_SHORT): Toast =
     Toast.makeText(applicationContext, message, length).also { it.show() }
@@ -47,8 +52,18 @@ fun showView(view: View, display: Boolean = true) {
   view.visibility = if (display) View.VISIBLE else View.INVISIBLE
 }
 
-fun getUserType() = USER_TYPE_ADMIN  // TODO: Update with rel dealer id
-fun getUserId() = "1"  // TODO: Update with rel dealer id
+fun Context.setPreferences(block: SharedPreferences.Editor.() -> SharedPreferences.Editor) {
+  PreferenceManager.getDefaultSharedPreferences(this)
+      .edit()
+      .block()
+      .apply()
+}
+
+fun Context.getPreference(block: SharedPreferences.() -> Any) =
+    PreferenceManager.getDefaultSharedPreferences(this).block()
+
+fun Context.getUserType() = getPreference { getInt("user_type", USER_TYPE_CLIENT) } as Int
+fun Context.getUserId() = getPreference { getString("user_id", "") } as String
 fun isUserAdmin(type: Int) = when (type) {
   USER_TYPE_ADMIN -> true
   USER_TYPE_CLIENT -> false

@@ -7,13 +7,11 @@ import android.os.Bundle
 import com.icode.rentcar.models.Vehicle
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_rent_vehicle.*
-import android.support.v4.app.NavUtils
 import android.view.MenuItem
 import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import com.icode.rentcar.*
 import com.icode.rentcar.models.Reservation
-
 
 class RentVehicleActivity : AppCompatActivity() {
   private val db = FirebaseFirestore.getInstance()

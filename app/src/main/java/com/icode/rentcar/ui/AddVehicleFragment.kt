@@ -125,7 +125,7 @@ class AddVehicleFragment : Fragment() {
       make = makeSpinner.selectedItem.toString(),
       color = colorSpinner.selectedItem.toString(),
       year = yearSpinner.selectedItem.toString(),
-      dealerId = getUserId()
+      dealerId = context?.getUserId() ?: ""
   )
 
   private fun saveVehicleInfo(vehicle: Vehicle) {
