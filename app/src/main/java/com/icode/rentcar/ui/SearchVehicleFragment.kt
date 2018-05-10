@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import com.icode.rentcar.*
 import com.icode.rentcar.models.Vehicle
 import com.squareup.picasso.Picasso
@@ -43,7 +44,24 @@ class SearchVehicleFragment : Fragment() {
     with(filterDialog) {
       yearSpinner.adapter = getSpinnerAdapter(YEARS)
       colorSpinner.adapter = getSpinnerAdapter(COLORS)
-      makeSpinner.adapter = getSpinnerAdapter(MAKES)
+      makeSpinner.adapter = getSpinnerAdapter(MAKES.keys.toList())
+
+      modelSpinner.adapter = getSpinnerAdapter(listOf("Seleciona una marca primero"))
+      modelSpinner.isEnabled = false
+
+      makeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+          MAKES[makeSpinner.selectedItem.toString()]?.let {
+            modelSpinner.isEnabled = position > 0
+            modelSpinner.adapter = getSpinnerAdapter(it.toList())
+            modelSpinner.setSelection(0)
+          }
+
+          if (position == 0) modelSpinner.adapter = getSpinnerAdapter(listOf("\"Seleciona una marca primero"))
+        }
+      }
 
       applyFiltersButton.setOnClickListener {
         filterVehicles()

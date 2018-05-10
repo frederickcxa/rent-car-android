@@ -37,11 +37,24 @@
         android:textSize="14sp" />
 
     <Spinner
-        android:id="@+id/colorSpinner"
+        android:id="@+id/modelSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:hint="Modelo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Color"
+        android:textSize="14sp" />
+
+    <Spinner
+        android:id="@+id/colorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:hint="Year" />
 
     <TextView
         android:layout_width="match_parent"

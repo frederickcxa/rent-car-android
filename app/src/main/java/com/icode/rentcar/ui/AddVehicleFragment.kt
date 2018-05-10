@@ -35,7 +35,23 @@ class AddVehicleFragment : Fragment() {
 
     yearSpinner.adapter = getSpinnerAdapter(YEARS)
     colorSpinner.adapter = getSpinnerAdapter(COLORS)
-    makeSpinner.adapter = getSpinnerAdapter(MAKES)
+    makeSpinner.adapter = getSpinnerAdapter(MAKES.keys.toList())
+    modelSpinner.adapter = getSpinnerAdapter(listOf("Seleciona una marca primero"))
+    modelSpinner.isEnabled = false
+
+    makeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        MAKES[makeSpinner.selectedItem.toString()]?.let {
+          modelSpinner.isEnabled = position > 0
+          modelSpinner.adapter = getSpinnerAdapter(it.toList())
+          modelSpinner.setSelection(0)
+        }
+
+        if (position == 0) modelSpinner.adapter = getSpinnerAdapter(listOf("Seleciona una marca primero"))
+      }
+    }
 
     addPhotoButton.setOnClickListener { pickPhoto() }
     saveVehicleButton.setOnClickListener {
