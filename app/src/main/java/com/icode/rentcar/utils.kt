@@ -64,6 +64,7 @@ fun Context.getPreference(block: SharedPreferences.() -> Any) =
 
 fun Context.getUserType() = getPreference { getInt("user_type", USER_TYPE_CLIENT) } as Int
 fun Context.getUserId() = getPreference { getString("user_id", "") } as String
+fun Context.getUserName() = getPreference { getString("user_name", "") } as String
 fun isUserAdmin(type: Int) = when (type) {
   USER_TYPE_ADMIN -> true
   USER_TYPE_CLIENT -> false

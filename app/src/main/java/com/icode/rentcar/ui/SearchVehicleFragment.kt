@@ -69,6 +69,7 @@ class SearchVehicleFragment : Fragment() {
       }
     }
 
+    filterVehiclesButton.isEnabled = false
     filterVehiclesButton.setOnClickListener {
       dialog.show()
     }
@@ -97,6 +98,7 @@ class SearchVehicleFragment : Fragment() {
               vehicles.addAll(it)
               vehicleAdapter.render(vehicles)
               showView(emptyView, vehicles.isEmpty())
+              filterVehiclesButton.isEnabled = vehicles.isNotEmpty()
             }
           } else {
             Log.d(TAG, "Error getting documents: ", task.exception)

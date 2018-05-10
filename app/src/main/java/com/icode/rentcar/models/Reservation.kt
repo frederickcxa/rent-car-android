@@ -11,5 +11,8 @@ data class Reservation(
     var userId: String = "",
     var userName: String = ""
 ) {
-  fun getDescription() = "$userName - $make $year $color"
+  fun getDescription() = """
+    |$make $year $color
+    |$userName
+  """.trimMargin()
 }

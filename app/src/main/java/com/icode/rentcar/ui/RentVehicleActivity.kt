@@ -39,7 +39,8 @@ class RentVehicleActivity : AppCompatActivity() {
           make = vehicle.make,
           color = vehicle.color,
           year = vehicle.year,
-          userId = getUserId()
+          userId = getUserId(),
+          userName = getUserName()
       )
 
       db.collection("reservations")

@@ -68,11 +68,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
           .get()
           .addOnCompleteListener {
             var userType = USER_TYPE_CLIENT
+            var userName = ""
 
             if (it.isSuccessful && it.result.exists()) {
               userType = it.result.toObject(User::class.java)?.type ?: USER_TYPE_CLIENT
             } else {
-              val name = user.displayName ?: "Anónimo"
+              userName = user.displayName ?: "Anónimo"
               val email = user.email ?: "Desconocido"
               val photoUrl = user.photoUrl.toString()
 
@@ -81,7 +82,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                   .set(
                       User(
                           uid = uid,
-                          name = name,
+                          name = userName,
                           email = email,
                           photoUrl = photoUrl,
                           type = userType
@@ -93,6 +94,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             setPreferences {
               putInt("user_type", userType)
               putString("user_id", uid)
+              putString("user_name", userName)
             }
 
             showHome(userType)
@@ -117,9 +119,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
   private fun renderFragment(itemId: Int) {
     val (fragment, title) = when (itemId) {
       R.id.nav_add_car -> AddVehicleFragment() to "Agregar Vehiculo"
-      R.id.nav_track_cars -> TrackCarsFragment() to "Monitorear Vehiculos"
+      R.id.nav_track_cars -> TrackCarsFragment.getInstance(TrackCarsFragment.LOCATION_TYPE_CARS) to "GPS de los Vehiculos"
       R.id.nav_search_car -> SearchVehicleFragment() to "Buscar Vehiculo"
-      R.id.nav_find_car_lot -> null to "Ver Parqueos"
+      R.id.nav_find_car_lot -> TrackCarsFragment.getInstance(TrackCarsFragment.LOCATION_TYPE_LOTS) to "Parqueos Disponibles"
       R.id.nav_all_business -> ReservationsFragment() to "Reservaciones"
       R.id.nav_my_business -> ReservationsFragment() to "Mis Reservaciones"
       else -> null to null
