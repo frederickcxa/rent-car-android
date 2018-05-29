@@ -34,8 +34,7 @@ private fun updateField(collection: String, id: String, field: String, data: Str
       .collection(collection)
       .document(id)
       .update(field, data)
-      .addOnFailureListener { e ->
-        Log.w("", "Error adding document", e)
+      .addOnCompleteListener {
         callback()
       }
 }

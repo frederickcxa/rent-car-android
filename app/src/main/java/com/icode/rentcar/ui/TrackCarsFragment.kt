@@ -2,7 +2,6 @@ package com.icode.rentcar.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +10,13 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.*
 
 import com.icode.rentcar.R
 import com.icode.rentcar.models.MapPosition
-import com.icode.rentcar.showView
-import kotlinx.android.synthetic.main.fragment_reservations.*
+import com.google.android.gms.maps.model.LatLngBounds
+
 
 private const val TAG = "TrackCarsFragment"
 private const val PARAM_LOCATION_TYPE = "PARAM_LOCATION_TYPE"
@@ -43,8 +41,8 @@ class TrackCarsFragment : Fragment(), OnMapReadyCallback {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-    mapFragment.getMapAsync(this)
+
+    (childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment).getMapAsync(this)
   }
 
   override fun onMapReady(map: GoogleMap) {
@@ -59,17 +57,33 @@ class TrackCarsFragment : Fragment(), OnMapReadyCallback {
     val query = db.collection(collection)
     registration = query.addSnapshotListener { value, error ->
       if (error != null) return@addSnapshotListener
+
       googleMap.clear()
 
-      value?.map { it.toObject(MapPosition::class.java) }?.forEach { mapPosition ->
+      value?.map { it.toObject(MapPosition::class.java) }?.map { mapPosition ->
         val position = LatLng(mapPosition.latitude.toDouble(), mapPosition.longitude.toDouble())
         val markerOptions = MarkerOptions().apply {
           position(position)
           title(mapPosition.title)
         }
 
-        googleMap.addMarker(markerOptions)
+        val marker = googleMap.addMarker(markerOptions)
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(position))
+
+
+        marker
+      }.also { markers ->
+        markers?.let {
+          val builder = LatLngBounds.Builder()
+
+          for (marker in it) {
+            builder.include(marker.position)
+          }
+
+          val cu = CameraUpdateFactory.newLatLngBounds(builder.build(), 200)
+
+          googleMap.moveCamera(cu)
+        }
       }
     }
   }

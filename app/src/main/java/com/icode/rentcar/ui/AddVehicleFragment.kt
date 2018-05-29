@@ -44,9 +44,11 @@ class AddVehicleFragment : Fragment() {
 
       override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         MAKES[makeSpinner.selectedItem.toString()]?.let {
-          modelSpinner.isEnabled = position > 0
-          modelSpinner.adapter = getSpinnerAdapter(it.toList())
-          modelSpinner.setSelection(0)
+          with(modelSpinner) {
+            isEnabled = position > 0
+            adapter = getSpinnerAdapter(it.toList())
+            setSelection(0)
+          }
         }
 
         if (position == 0) modelSpinner.adapter = getSpinnerAdapter(listOf("Seleciona una marca primero"))
@@ -91,6 +93,7 @@ class AddVehicleFragment : Fragment() {
     val images = (0..photosContainer.childCount).map {
       photosContainer.getChildAt(it)
     }.filter { it is ImageView }
+
     val imagesCount = images.size
     var uploadedImages = 0
 
@@ -171,9 +174,8 @@ class AddVehicleFragment : Fragment() {
 
   private fun pickPhoto() {
     val galleryUri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+    val intent = Intent(Intent.ACTION_PICK, galleryUri)
 
-    Intent(Intent.ACTION_PICK, galleryUri).also {
-      startActivityForResult(it, 0)
-    }
+    startActivityForResult(intent, 0)
   }
 }

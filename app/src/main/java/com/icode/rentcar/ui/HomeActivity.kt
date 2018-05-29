@@ -1,11 +1,13 @@
 package com.icode.rentcar.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,6 +40,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     toggle.syncState()
 
     navView.setNavigationItemSelectedListener(this)
+    updateUserInfo()
   }
 
   private fun updateHeaderViewUserInfo() {
@@ -52,11 +55,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
       navView.menu.findItem(R.id.adminGroup).setVisible(isUserAdmin(getUserType()))
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    updateUserInfo()
   }
 
   private fun updateUserInfo() {
@@ -122,8 +120,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       R.id.nav_track_cars -> TrackCarsFragment.getInstance(TrackCarsFragment.LOCATION_TYPE_CARS) to "GPS de los Vehiculos"
       R.id.nav_search_car -> SearchVehicleFragment() to "Buscar Vehiculo"
       R.id.nav_find_car_lot -> TrackCarsFragment.getInstance(TrackCarsFragment.LOCATION_TYPE_LOTS) to "Parqueos Disponibles"
-      R.id.nav_all_business -> ReservationsFragment() to "Reservaciones"
-      R.id.nav_my_business -> ReservationsFragment() to "Mis Reservaciones"
+      R.id.nav_all_business -> ReservationsFragment.getInstance(Role.ADMIN) to "Reservaciones"
+      R.id.nav_my_business -> ReservationsFragment.getInstance(Role.CLIENT) to "Mis Reservaciones"
       else -> null to null
     }
 
@@ -137,6 +135,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
   }
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    if (item.itemId == R.id.nav_log_out) {
+      FirebaseAuth.getInstance().signOut()
+      startActivity(Intent(this, LoginActivity::class.java))
+    }
+
     renderFragment(item.itemId)
     drawerLayout.closeDrawer(GravityCompat.START)
 

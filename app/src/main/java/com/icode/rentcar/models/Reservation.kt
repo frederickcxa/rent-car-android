@@ -9,7 +9,8 @@ data class Reservation(
     var imageUrl: String = "",
     var dealerId: String = "",
     var userId: String = "",
-    var userName: String = ""
+    var userName: String = "",
+    var status: String = "P"
 ) {
   fun getDescription() = """
     |$make $year $color

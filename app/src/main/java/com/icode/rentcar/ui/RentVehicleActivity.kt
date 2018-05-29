@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.icode.rentcar.models.Vehicle
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_rent_vehicle.*
@@ -48,8 +49,10 @@ class RentVehicleActivity : AppCompatActivity() {
           .addOnCompleteListener {
             if (it.isSuccessful) {
               toast("Su reservación fue exitosa")
+              val reservationId = it.result.id
+
               updateVehicleField(reservation.vehicleId, "status", "true") {
-                updateReservationField(it.result.id, "id", it.result.id) {
+                updateReservationField(reservationId, "id", reservationId) {
                   finish()
                 }
               }
@@ -60,18 +63,14 @@ class RentVehicleActivity : AppCompatActivity() {
     }
   }
 
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-      android.R.id.home -> onBackPressed().run { true }
-      else -> super.onOptionsItemSelected(item)
-    }
+  override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+    android.R.id.home -> onBackPressed().run { true }
+    else -> super.onOptionsItemSelected(item)
   }
 
   companion object {
-    fun getIntent(context: Context, vehicle: Vehicle): Intent {
-      return Intent(context, RentVehicleActivity::class.java).apply {
-        putExtra("vehicle", vehicle)
-      }
+    fun getIntent(context: Context, vehicle: Vehicle) = Intent(context, RentVehicleActivity::class.java).apply {
+      putExtra("vehicle", vehicle)
     }
   }
 }

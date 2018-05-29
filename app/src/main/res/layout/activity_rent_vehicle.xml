@@ -29,12 +29,15 @@
             android:id="@+id/reserveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Make Reservation" />
+            android:text="Make Reservation"
+            android:textColor="@color/colorWhite" />
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </RelativeLayout>

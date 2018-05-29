@@ -1,5 +1,6 @@
 package com.icode.rentcar.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -25,6 +26,12 @@ class SearchVehicleFragment : Fragment() {
   private val vehicles = arrayListOf<Vehicle>()
   private lateinit var vehicleAdapter: VehicleAdapter
   private lateinit var filterDialog: View
+  private lateinit var safeContext: Context
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    safeContext = context
+  }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
       inflater.inflate(R.layout.fragment_search_vehicle, container, false)
@@ -32,10 +39,7 @@ class SearchVehicleFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    vehicleAdapter = VehicleAdapter {
-      showCarDetail(it)
-    }
-
+    vehicleAdapter = VehicleAdapter { showCarDetail(it) }
     filterDialog = layoutInflater.inflate(R.layout.dialog_filter_cars, null)
     val dialog = AlertDialog.Builder(view.context)
         .setView(filterDialog)
@@ -59,7 +63,7 @@ class SearchVehicleFragment : Fragment() {
             modelSpinner.setSelection(0)
           }
 
-          if (position == 0) modelSpinner.adapter = getSpinnerAdapter(listOf("\"Seleciona una marca primero"))
+          if (position == 0) modelSpinner.adapter = getSpinnerAdapter(listOf("Seleciona una marca primero"))
         }
       }
 
@@ -69,9 +73,11 @@ class SearchVehicleFragment : Fragment() {
       }
     }
 
-    filterVehiclesButton.isEnabled = false
-    filterVehiclesButton.setOnClickListener {
-      dialog.show()
+    with(filterVehiclesButton) {
+      isEnabled = false
+      setOnClickListener {
+        dialog.show()
+      }
     }
 
     with(vehiclesRecyclerView) {
@@ -89,11 +95,11 @@ class SearchVehicleFragment : Fragment() {
   private fun loadData() {
     showView(progressBar)
     db.collection("vehicles")
-        .whereEqualTo("dealerId", context?.getUserId())
         .whereEqualTo("status", "false")
         .get()
         .addOnCompleteListener { task ->
           if (task.isSuccessful) {
+            vehicles.clear()
             task.result.map { it.toObject(Vehicle::class.java) }.also {
               vehicles.addAll(it)
               vehicleAdapter.render(vehicles)
@@ -109,9 +115,9 @@ class SearchVehicleFragment : Fragment() {
   }
 
   private fun showCarDetail(vehicle: Vehicle) {
-    context?.let {
-      startActivity(RentVehicleActivity.getIntent(it, vehicle))
-    }
+    val intent = RentVehicleActivity.getIntent(safeContext, vehicle)
+
+    startActivity(intent)
   }
 
   private fun filterVehicles() {

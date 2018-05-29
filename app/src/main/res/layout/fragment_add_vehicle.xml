@@ -98,13 +98,15 @@
                 android:id="@+id/addPhotoButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Agregar Foto" />
+                android:text="Agregar Foto"
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:id="@+id/saveVehicleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Guardar" />
+                android:text="Guardar"
+                android:textColor="@color/colorWhite" />
 
             <LinearLayout
                 android:id="@+id/photosContainer"
