@@ -10,10 +10,12 @@ data class Reservation(
     var dealerId: String = "",
     var userId: String = "",
     var userName: String = "",
-    var status: String = "P"
+    var status: String = "P",
+    var total: Int = 0
 ) {
   fun getDescription() = """
     |$make $year $color
     |$userName
+    |$$total
   """.trimMargin()
 }

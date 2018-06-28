@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.app.AlertDialog
+import android.text.Editable
+import android.text.TextWatcher
 import com.icode.rentcar.models.Vehicle
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_rent_vehicle.*
@@ -16,6 +18,8 @@ import com.icode.rentcar.models.Reservation
 
 class RentVehicleActivity : AppCompatActivity() {
   private val db = FirebaseFirestore.getInstance()
+  val totalMapping = mutableMapOf<String, Int>()
+  var total = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -29,38 +33,88 @@ class RentVehicleActivity : AppCompatActivity() {
       vehicleDescription.text = getDescription()
     }
 
-    reserveButton.setOnClickListener {
-      mainContainer.visibility = View.GONE
-      progressBar.visibility = View.VISIBLE
+    daysToRentField.addTextChangedListener(object : TextWatcher {
+      override fun afterTextChanged(s: Editable?) {}
 
-      val reservation = Reservation(
-          vehicleId = vehicle.id,
-          imageUrl = vehicle.imageUrl,
-          dealerId = vehicle.dealerId,
-          make = vehicle.make,
-          color = vehicle.color,
-          year = vehicle.year,
-          userId = getUserId(),
-          userName = getUserName()
-      )
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-      db.collection("reservations")
-          .add(reservation)
-          .addOnCompleteListener {
-            if (it.isSuccessful) {
-              toast("Su reservación fue exitosa")
-              val reservationId = it.result.id
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        s?.let {
+          totalMapping["days"] = vehicle.price * s.toString().toInt()
+        }
 
-              updateVehicleField(reservation.vehicleId, "status", "true") {
-                updateReservationField(reservationId, "id", reservationId) {
-                  finish()
-                }
-              }
-            } else {
-              toast("La reservación no fue guardada, por favor intente mas tarde")
-            }
+        updateTotal()
+      }
+    })
+
+    listOf(rimsCheckBox, hidCheckBox, musicCheckBox).forEach {
+      it.setOnCheckedChangeListener { buttonView, isChecked ->
+        val id = buttonView.id
+
+        if (isChecked) {
+          val amount = when (buttonView.id) {
+            rimsCheckBox.id -> 300
+            musicCheckBox.id -> 500
+            hidCheckBox.id -> 200
+            else -> 0
           }
+
+          totalMapping[id.toString()] = amount
+        } else {
+          totalMapping[id.toString()] = 0
+        }
+
+        updateTotal()
+      }
     }
+
+    reserveButton.setOnClickListener {
+      if (daysToRentField.text.isNotEmpty()) {
+        AlertDialog.Builder(this)
+            .setTitle("Reservación")
+            .setMessage("Desea hacer esta reservación?")
+            .setPositiveButton("Si") { dialog, _ ->
+              val reservation = Reservation(
+                  vehicleId = vehicle.id,
+                  imageUrl = vehicle.imageUrl,
+                  dealerId = vehicle.dealerId,
+                  make = vehicle.make,
+                  color = vehicle.color,
+                  year = vehicle.year,
+                  userId = getUserId(),
+                  userName = getUserName(),
+                  total = total
+              )
+
+              db.collection("reservations")
+                  .add(reservation)
+                  .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                      toast("Su reservación fue exitosa")
+                      val reservationId = it.result.id
+
+                      updateVehicleField(reservation.vehicleId, "status", "true") {
+                        updateReservationField(reservationId, "id", reservationId) {
+                          finish()
+                        }
+                      }
+                    } else {
+                      toast("La reservación no fue guardada, por favor intente mas tarde")
+                    }
+                  }
+            }
+            .setNegativeButton("No") { dialog, _ ->
+              dialog.dismiss()
+            }.show()
+      } else {
+        toast("Debe registrar dias por los que rentará el carro")
+      }
+    }
+  }
+
+  private fun updateTotal() {
+    total = totalMapping.map { it.value }.sum()
+    reservationTotal.text = "Total: $$total"
   }
 
   override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

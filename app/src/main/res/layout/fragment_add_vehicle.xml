@@ -85,7 +85,22 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Fotos Del Vehículo"
+                android:text="Precio"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/priceField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Precio"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="Fotos"
                 android:textSize="20sp" />
 
             <View

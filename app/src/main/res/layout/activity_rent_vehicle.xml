@@ -25,6 +25,44 @@
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_horizontal_margin" />
 
+        <CheckBox
+            android:id="@+id/musicCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Musica" />
+
+        <CheckBox
+            android:id="@+id/rimsCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aros" />
+
+        <CheckBox
+            android:id="@+id/hidCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Luces" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dias a Rentar" />
+
+        <EditText
+            android:id="@+id/daysToRentField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/reservationTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="Total"
+            android:textColor="@color/colorBlack" />
+
         <Button
             android:id="@+id/reserveButton"
             android:layout_width="match_parent"

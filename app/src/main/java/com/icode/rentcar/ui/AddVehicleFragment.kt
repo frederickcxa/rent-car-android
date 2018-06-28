@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import android.graphics.Bitmap
+import android.support.v7.app.AlertDialog
 import com.google.firebase.firestore.SetOptions
 import com.icode.rentcar.*
 import java.io.ByteArrayOutputStream
@@ -58,8 +59,17 @@ class AddVehicleFragment : Fragment() {
     addPhotoButton.setOnClickListener { pickPhoto() }
     saveVehicleButton.setOnClickListener {
       if (isFormValid()) {
-        showProgressBar()
-        saveVehicleInfo(getVehicle())
+        AlertDialog.Builder(view.context)
+            .setTitle("Vehiculo")
+            .setMessage("Desea agregar este vehiculo?")
+            .setPositiveButton("Si") { dialog, _ ->
+              dialog.dismiss()
+              showProgressBar()
+              saveVehicleInfo(getVehicle())
+            }
+            .setNegativeButton("No") { dialog, _ ->
+              dialog.dismiss()
+            }.show()
       } else {
         toast("Debe agregar fotos y la información del vehículo")
       }
@@ -77,8 +87,9 @@ class AddVehicleFragment : Fragment() {
   }
 
   private fun isFormValid(): Boolean {
-    return photosContainer.childCount > 0 && arrayOf(yearSpinner, colorSpinner, makeSpinner)
-        .all { it.selectedItem.toString() != DEFAULT_OPTION }
+    return photosContainer.childCount > 0 &&
+        priceField.text.isNotBlank() &&
+        arrayOf(yearSpinner, colorSpinner, makeSpinner).all { it.selectedItem.toString() != DEFAULT_OPTION }
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -144,7 +155,8 @@ class AddVehicleFragment : Fragment() {
       make = makeSpinner.selectedItem.toString(),
       color = colorSpinner.selectedItem.toString(),
       year = yearSpinner.selectedItem.toString(),
-      dealerId = context?.getUserId() ?: ""
+      dealerId = context?.getUserId() ?: "",
+      price = priceField.text.toString().toInt()
   )
 
   private fun saveVehicleInfo(vehicle: Vehicle) {

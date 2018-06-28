@@ -11,7 +11,8 @@ data class Vehicle(
     var year: String = "",
     var imageUrl: String = "",
     var dealerId: String = "",
-    var status: String = "false"
+    var status: String = "false",
+    var price: Int = 0
 ) : Parcelable {
-  fun getDescription() = "$make $year $color - $id"
+  fun getDescription() = "$make $year $color $${price}- $id"
 }
