@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
@@ -13,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.icode.rentcar.*
+import com.icode.rentcar.models.Reservation
 import com.icode.rentcar.models.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_home.*
@@ -110,7 +112,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
-      super.onBackPressed()
+      AlertDialog.Builder(this)
+          .setTitle("Rent Car")
+          .setMessage("Desea salir de la aplicación?")
+          .setPositiveButton("Si") { dialog, _ ->
+            super.onBackPressed()
+          }.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+          }.show()
     }
   }
 

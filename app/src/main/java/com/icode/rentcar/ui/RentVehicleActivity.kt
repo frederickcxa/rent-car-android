@@ -47,6 +47,12 @@ class RentVehicleActivity : AppCompatActivity() {
       }
     })
 
+    val rimsUrl = "https://www.tirebuyer.com/medias/sys_master/h09/h34/9171220758558.jpg"
+    val hidUrl = "https://sc02.alicdn.com/kf/HTB1zVyDdk.HL1JjSZFlq6yiRFXak/Hotsale-35W-55W-HID-Xenon-Kit-55W.jpg_350x350.jpg"
+
+    Picasso.get().load(rimsUrl).into(rimsImage)
+    Picasso.get().load(hidUrl).into(hidImage)
+
     listOf(rimsCheckBox, hidCheckBox, musicCheckBox).forEach {
       it.setOnCheckedChangeListener { buttonView, isChecked ->
         val id = buttonView.id
@@ -62,6 +68,15 @@ class RentVehicleActivity : AppCompatActivity() {
           totalMapping[id.toString()] = amount
         } else {
           totalMapping[id.toString()] = 0
+        }
+
+        when (id) {
+          R.id.hidCheckBox -> {
+            hidImage.visibility = if (isChecked) View.VISIBLE else View.GONE
+          }
+          R.id.rimsCheckBox -> {
+            rimsImage.visibility = if (isChecked) View.VISIBLE else View.GONE
+          }
         }
 
         updateTotal()
