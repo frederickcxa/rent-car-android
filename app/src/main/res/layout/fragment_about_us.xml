@@ -1,0 +1,79 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.icode.rentcar.ui.ReservationsActivity">
+
+    <TextView
+        android:padding="16dp"
+        android:textSize="24sp"
+        android:textColor="#000"
+        android:text="Para todas las preguntas, póngase en contácto con nuestro equipo de soporte por correo electronico:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="support@gmail.com"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:padding="16dp"
+        android:text="Ubicados:"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="Calle primera La Vega, RD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:padding="16dp"
+        android:text="Llámenos"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="La Vega 809-573-1111"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="Lunes a Viernes de 8AM - 6PM"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="Santiago 809-573-1111"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="Lunes a Viernes de 8AM - 6PM"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -8,6 +8,7 @@
     tools:context=".ui.RentVehicleActivity">
 
     <RelativeLayout
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -29,6 +30,18 @@
                 android:paddingBottom="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_horizontal_margin" />
 
+            <TextView
+                android:id="@+id/pickDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No ha seleccionado una fecha" />
+
+            <Button
+                android:id="@+id/pickerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seleccione Fecha" />
+
             <CheckBox
                 android:id="@+id/musicCheckBox"
                 android:layout_width="match_parent"
@@ -41,6 +54,14 @@
                 android:layout_height="wrap_content"
                 android:text="Aros" />
 
+            <Spinner
+                android:id="@+id/rimsSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Year"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/rimsImage"
                 android:layout_width="match_parent"
@@ -52,6 +73,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Luces" />
+
+            <Spinner
+                android:id="@+id/hidSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Year"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/hidImage"

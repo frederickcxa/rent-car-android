@@ -2,6 +2,7 @@ package com.icode.rentcar.ui
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -65,6 +66,10 @@ class ReservationsFragment : Fragment() {
                 dialog.dismiss()
               }.show()
         }
+      } else {
+        onClick = { _, _ ->
+          goToMap()
+        }
       }
     }
 
@@ -109,6 +114,13 @@ class ReservationsFragment : Fragment() {
     listenerRegistration.remove()
   }
 
+  private fun goToMap() {
+    val gmmIntentUri = Uri.parse("geo:19.232032,-70.518159?q=ucateci")
+    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+    mapIntent.setPackage("com.google.android.apps.maps")
+    startActivity(mapIntent)
+  }
+
   inner class ReservationAdapter(var onClick: (id: String, vehicleId: String) -> Unit = { _, _ -> }) : RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder>() {
     private var data: List<Reservation> = listOf()
 
@@ -136,7 +148,7 @@ class ReservationsFragment : Fragment() {
       fun bind(reservation: Reservation) {
         with(reservation) {
           Picasso.get().load(imageUrl).into(image)
-          description.text = getDescription()
+          description.text = getDescription()  + if (pickUpDate.isNotBlank())  ", Recojer el " + pickUpDate + " a las 9AM" else ""
           itemView.setOnClickListener { onClick(id, vehicleId) }
         }
       }

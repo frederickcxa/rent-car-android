@@ -11,7 +11,8 @@ data class Reservation(
     var userId: String = "",
     var userName: String = "",
     var status: String = "P",
-    var total: Int = 0
+    var total: Long = 0,
+    var pickUpDate: String = ""
 ) {
   fun getDescription() = """
     |$make $year $color

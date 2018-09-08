@@ -11,4 +11,5 @@
     <string name="drawer_nav_item_search_car">Buscar Vehiculo</string>
     <string name="drawer_nav_item_all_business">Reservaciones</string>
     <string name="drawer_nav_item_my_business">Mis Reservaciones</string>
+    <string name="drawer_nav_item_about_us">Contáctanos</string>
 </resources>

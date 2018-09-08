@@ -131,6 +131,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       R.id.nav_find_car_lot -> TrackCarsFragment.getInstance(TrackCarsFragment.LOCATION_TYPE_LOTS) to "Parqueos Disponibles"
       R.id.nav_all_business -> ReservationsFragment.getInstance(Role.ADMIN) to "Reservaciones"
       R.id.nav_my_business -> ReservationsFragment.getInstance(Role.CLIENT) to "Mis Reservaciones"
+      R.id.nav_about_us -> AboutUsFragment() to "Contacto - Soporte"
       else -> null to null
     }
 

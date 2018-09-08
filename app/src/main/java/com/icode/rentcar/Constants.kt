@@ -31,3 +31,13 @@ val MAKES = mapOf("${DEFAULT_OPTION}a marca" to sortedSetOf("")).plus(
 val YEARS = arrayListOf("$DEFAULT_OPTION año").plus((1990..2018)
     .map(Int::toString))
     .toList()
+
+val RIMS = mapOf(
+    "Standard" to Pair("https://www.tirebuyer.com/medias/sys_master/h09/h34/9171220758558.jpg", 300),
+    "Full" to Pair("https://www.tirebuyer.com/medias/sys_master/h09/h34/9171220758558.jpg", 400)
+)
+
+val HIDS = mapOf(
+    "Standard" to Pair("https://sc02.alicdn.com/kf/HTB1zVyDdk.HL1JjSZFlq6yiRFXak/Hotsale-35W-55W-HID-Xenon-Kit-55W.jpg_350x350.jpg", 100),
+    "Full" to Pair("https://sc02.alicdn.com/kf/HTB1zVyDdk.HL1JjSZFlq6yiRFXak/Hotsale-35W-55W-HID-Xenon-Kit-55W.jpg_350x350.jpg", 200)
+)

@@ -15,11 +15,29 @@ import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import com.icode.rentcar.*
 import com.icode.rentcar.models.Reservation
+import java.util.*
+import android.app.DatePickerDialog
+import android.widget.AdapterView
+import java.text.SimpleDateFormat
+
 
 class RentVehicleActivity : AppCompatActivity() {
   private val db = FirebaseFirestore.getInstance()
-  val totalMapping = mutableMapOf<String, Int>()
-  var total = 0
+  val totalMapping = mutableMapOf<String, Long>()
+  private var total: Long = 0
+  private val myCalendar = Calendar.getInstance()
+
+  var date: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+    // TODO Auto-generated method stub
+    myCalendar.set(Calendar.YEAR, year)
+    myCalendar.set(Calendar.MONTH, monthOfYear)
+    myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+    updateLabel()
+  }
+
+  private fun updateLabel() {
+    pickDateText.text = SimpleDateFormat("dd/mm/yyyy").format(Date(myCalendar.timeInMillis))
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -40,7 +58,9 @@ class RentVehicleActivity : AppCompatActivity() {
 
       override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         s?.let {
-          totalMapping["days"] = vehicle.price * s.toString().toInt()
+          if (s.isNotEmpty()) {
+            totalMapping["days"] = vehicle.price * s.toString().toLong()
+          }
         }
 
         updateTotal()
@@ -57,25 +77,33 @@ class RentVehicleActivity : AppCompatActivity() {
       it.setOnCheckedChangeListener { buttonView, isChecked ->
         val id = buttonView.id
 
-        if (isChecked) {
-          val amount = when (buttonView.id) {
-            rimsCheckBox.id -> 300
-            musicCheckBox.id -> 500
-            hidCheckBox.id -> 200
-            else -> 0
+        if (id == musicCheckBox.id) {
+          if (isChecked) {
+            totalMapping[id.toString()] = 500
+          } else {
+            totalMapping[id.toString()] = 0
           }
-
-          totalMapping[id.toString()] = amount
-        } else {
-          totalMapping[id.toString()] = 0
         }
+
 
         when (id) {
           R.id.hidCheckBox -> {
-            hidImage.visibility = if (isChecked) View.VISIBLE else View.GONE
+            val isVisible = if (isChecked) View.VISIBLE else View.GONE
+            hidSpinner.visibility = isVisible
+            hidImage.visibility = isVisible
+
+            if (!isChecked) {
+              totalMapping[id.toString()] = 0
+            }
           }
           R.id.rimsCheckBox -> {
-            rimsImage.visibility = if (isChecked) View.VISIBLE else View.GONE
+            val isVisible = if (isChecked) View.VISIBLE else View.GONE
+            rimsSpinner.visibility = isVisible
+            rimsImage.visibility = isVisible
+
+            if (!isChecked) {
+              totalMapping[id.toString()] = 0
+            }
           }
         }
 
@@ -83,8 +111,14 @@ class RentVehicleActivity : AppCompatActivity() {
       }
     }
 
+    pickerButton.setOnClickListener {
+      DatePickerDialog(this, date, myCalendar
+          .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+          myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
     reserveButton.setOnClickListener {
-      if (daysToRentField.text.isNotEmpty()) {
+      if (daysToRentField.text.isNotEmpty() && pickDateText.text.toString() != "No ha seleccionado una fecha") {
         AlertDialog.Builder(this)
             .setTitle("Reservación")
             .setMessage("Desea hacer esta reservación?")
@@ -98,7 +132,8 @@ class RentVehicleActivity : AppCompatActivity() {
                   year = vehicle.year,
                   userId = getUserId(),
                   userName = getUserName(),
-                  total = total
+                  total = total,
+                  pickUpDate = pickDateText.text.toString()
               )
 
               db.collection("reservations")
@@ -122,7 +157,32 @@ class RentVehicleActivity : AppCompatActivity() {
               dialog.dismiss()
             }.show()
       } else {
-        toast("Debe registrar dias por los que rentará el carro")
+        toast("Debe registrar dias por los que rentará el carro y desde cuando")
+      }
+    }
+
+    hidSpinner.adapter = getSpinnerAdapter(HIDS.keys.toList())
+    rimsSpinner.adapter = getSpinnerAdapter(RIMS.keys.toList())
+
+    listOf(hidSpinner, rimsSpinner).forEach {
+      it.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+          if (it.id == R.id.rimsSpinner) {
+            RIMS[rimsSpinner.selectedItem.toString()]?.let { (url, price) ->
+              Picasso.get().load(url).into(rimsImage)
+              totalMapping[rimsCheckBox.id.toString()] = price.toLong()
+              updateTotal()
+            }
+          } else if (it.id == R.id.hidSpinner) {
+            HIDS[hidSpinner.selectedItem.toString()]?.let { (url, price) ->
+              Picasso.get().load(url).into(hidImage)
+              totalMapping[hidCheckBox.id.toString()] = price.toLong()
+              updateTotal()
+            }
+          }
+        }
       }
     }
   }
